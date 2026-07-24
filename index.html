@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мастерская подарков «всЕЛЕНнАя»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================================
+   ТОКЕНЫ ДИЗАЙНА
+   ============================================================ */
+:root{
+  --paper:#ffffff;
+  --paper-alt:#f6f5f2;
+  --ink:#151414;
+  --ink-soft:#5e5b57;
+  --ink-faint:#9a968f;
+  --line:#e2ddd4;
+  --line-strong:#151414;
+  --radius:3px;
+  --wrap:1180px;
+  --serif:'Fraunces', Georgia, serif;
+  --sans:'Inter', -apple-system, sans-serif;
+  --hand:'Caveat', cursive;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:var(--paper);
+  -webkit-font-smoothing:antialiased;
+  line-height:1.5;
+}
+
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+ul{list-style:none;}
+
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 32px;}
+
+/* лёгкая бумажная фактура фона */
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  pointer-events:none;
+  z-index:0;
+  opacity:.35;
+  background-image:radial-gradient(var(--ink-faint) .5px, transparent .5px);
+  background-size:3px 3px;
+  mix-blend-mode:multiply;
+  opacity:.05;
+}
+
+/* ============================================================
+   ЛОГОТИП / ПОДПИСЬ МАСТЕРА
+   Заглавные буквы в названии «НАя» складываются в имя
+   мастера — Елена. Это и есть подпись мастерской.
+   ============================================================ */
+.logotype{
+  font-family:var(--serif);
+  font-weight:500;
+  font-size:22px;
+  letter-spacing:.01em;
+  white-space:nowrap;
+}
+.logotype .sig{
+  font-family:var(--hand);
+  font-weight:600;
+  font-size:1.18em;
+  color:var(--ink);
+}
+.logotype-big{
+  font-size:clamp(48px,9vw,108px);
+  line-height:1;
+  font-weight:400;
+}
+.logotype-big .sig{
+  font-weight:600;
+}
+
+/* ============================================================
+   ШАПКА / НАВИГАЦИЯ
+   ============================================================ */
+header{
+  position:fixed;top:0;left:0;right:0;
+  z-index:100;
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  height:76px;
+}
+nav.primary-nav ul{
+  display:flex;gap:36px;
+}
+nav.primary-nav a{
+  font-size:14px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  position:relative;
+  padding:4px 0;
+  transition:color .2s ease;
+}
+nav.primary-nav a::after{
+  content:"";
+  position:absolute;left:0;bottom:0;
+  width:0;height:1px;background:var(--ink);
+  transition:width .25s ease;
+}
+nav.primary-nav a:hover,
+nav.primary-nav a.active{color:var(--ink);}
+nav.primary-nav a:hover::after,
+nav.primary-nav a.active::after{width:100%;}
+
+.burger{display:none;width:28px;height:20px;position:relative;}
+.burger span{
+  position:absolute;left:0;right:0;height:1px;background:var(--ink);
+  transition:transform .25s ease, opacity .25s ease, top .25s ease;
+}
+.burger span:nth-child(1){top:0;}
+.burger span:nth-child(2){top:9px;}
+.burger span:nth-child(3){top:18px;}
+.burger.open span:nth-child(1){top:9px;transform:rotate(45deg);}
+.burger.open span:nth-child(2){opacity:0;}
+.burger.open span:nth-child(3){top:9px;transform:rotate(-45deg);}
+
+/* ============================================================
+   СТРАНИЦЫ (переключаются через JS, адрес меняется в хэше)
+   ============================================================ */
+.page{display:none;padding-top:76px;}
+.page.active{display:block;}
+
+section{padding:96px 0;}
+section.tight{padding:64px 0;}
+.section-alt{background:var(--paper-alt);}
+.section-line-top{border-top:1px solid var(--line);}
+
+.eyebrow{
+  font-family:var(--hand);
+  font-size:22px;
+  color:var(--ink-soft);
+  margin-bottom:6px;
+  display:inline-block;
+}
+h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:-.01em;}
+h2{font-size:clamp(28px,3.4vw,42px);}
+h3{font-size:22px;}
+p{color:var(--ink-soft);}
+.lede{font-size:19px;line-height:1.65;max-width:60ch;}
+
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid var(--ink);
+  padding:14px 26px;
+  font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+  border-radius:var(--radius);
+  transition:background .2s ease,color .2s ease;
+}
+.btn:hover{background:var(--ink);color:var(--paper);}
+.btn-ghost{border-color:var(--line);}
+.btn-ghost:hover{background:var(--ink);border-color:var(--ink);}
+.btn-arrow::after{content:"→";transition:transform .2s ease;}
+.btn-arrow:hover::after{transform:translateX(4px);}
+
+/* ============================================================
+   ГЛАВНАЯ — hero
+   ============================================================ */
+.hero{
+  min-height:88vh;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;
+}
+.hero-top{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  gap:40px;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);
+  padding-bottom:36px;margin-bottom:36px;
+}
+.hero-meta{
+  font-size:13px;color:var(--ink-faint);
+  text-transform:uppercase;letter-spacing:.08em;
+  max-width:260px;text-align:right;
+}
+.hero-desc{
+  display:flex;justify-content:space-between;gap:48px;
+  align-items:flex-end;flex-wrap:wrap;
+}
+
+/* сетка "избранное" на главной */
+.featured-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--line);
+  border:1px solid var(--line);
+  margin-top:24px;
+}
+.featured-grid .product-card{border:none;}
+
+/* блок про мастера коротко */
+.about-teaser{
+  display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:center;
+}
+.portrait-frame{aspect-ratio:4/5;}
+
+/* цитата почерком */
+blockquote.handwritten{
+  font-family:var(--hand);
+  font-size:clamp(26px,3vw,36px);
+  color:var(--ink);
+  line-height:1.4;
+  max-width:52ch;
+  margin:0 auto;
+  text-align:center;
+}
+blockquote.handwritten cite{
+  display:block;font-family:var(--sans);font-style:normal;
+  font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-faint);margin-top:18px;
+}
+
+/* ============================================================
+   ПЛЕЙСХОЛДЕР ФОТО ТОВАРА
+   Замените: вместо .ph-photo вставьте <img src="ваше-фото.jpg" alt="...">
+   ============================================================ */
+.ph-photo{
+  aspect-ratio:4/5;
+  background:var(--paper-alt);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+.ph-photo svg{width:34%;height:34%;stroke:var(--ink-faint);opacity:.55;}
+.ph-photo::after{
+  content:"фото товара";
+  position:absolute;bottom:10px;left:10px;
+  font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-faint);
+}
+.portrait-frame.ph-photo::after{content:"фото мастера";}
+
+/* ============================================================
+   КАТАЛОГ
+   ============================================================ */
+.catalog-head{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  gap:24px;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);
+  padding-bottom:28px;margin-bottom:40px;
+}
+.filters{display:flex;gap:8px;flex-wrap:wrap;}
+.filter-btn{
+  padding:9px 18px;font-size:13px;letter-spacing:.03em;
+  border:1px solid var(--line);border-radius:20px;
+  color:var(--ink-soft);transition:all .2s ease;
+}
+.filter-btn:hover{border-color:var(--ink);color:var(--ink);}
+.filter-btn.active{background:var(--ink);border-color:var(--ink);color:var(--paper);}
+.filters-sub{margin-top:14px;padding-top:18px;border-top:1px solid var(--line);margin-bottom:36px;}
+.filters-sub .filter-btn{font-size:12px;padding:7px 15px;color:var(--ink-faint);}
+.filters-sub .filter-btn.active{background:transparent;color:var(--ink);border-color:var(--ink);}
+.filters-sub:empty{display:none;}
+
+.product-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:40px 32px;
+}
+.product-card{
+  cursor:pointer;
+  transition:transform .3s ease;
+}
+.product-card:hover{
+  transform:scale(1.05);
+}
+.product-card .info{
+  padding-top:14px;
+  display:flex;justify-content:space-between;gap:12px;
+}
+.product-card h3{font-size:17px;margin-bottom:3px;}
+.product-card .cat-label{
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-faint);
+}
+.product-card .price{font-family:var(--serif);font-size:17px;white-space:nowrap;}
+.product-card:hover .ph-photo{background:#efece6;}
+.product-card:hover .ph-photo svg{transform:scale(1.06);}
+.ph-photo svg{transition:transform .3s ease;}
+
+.empty-state{
+  padding:80px 0;text-align:center;color:var(--ink-faint);
+  font-family:var(--serif);font-size:20px;
+}
+
+/* модалка товара */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(21,20,20,.5);
+  z-index:200;display:none;align-items:center;justify-content:center;
+  padding:24px;
+}
+.modal-backdrop.open{display:flex;}
+.modal{
+  background:var(--paper);max-width:820px;width:100%;
+  max-height:86vh;overflow:auto;
+  display:grid;grid-template-columns:1fr 1fr;
+  border-radius:var(--radius);
+}
+.modal .ph-photo{aspect-ratio:auto;height:100%;}
+.modal-info{padding:40px;display:flex;flex-direction:column;gap:14px;}
+.modal-close{
+  position:absolute;top:18px;right:18px;
+  width:34px;height:34px;border:1px solid var(--line);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+  background:var(--paper);
+}
+.modal{position:relative;}
+
+/* ============================================================
+   О МАСТЕРЕ
+   ============================================================ */
+.about-hero{
+  display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;
+}
+.timeline{border-top:1px solid var(--line);}
+.timeline-row{
+  display:grid;grid-template-columns:120px 1fr;gap:32px;
+  padding:28px 0;border-bottom:1px solid var(--line);
+}
+.timeline-row .year{
+  font-family:var(--hand);font-size:24px;color:var(--ink-soft);
+}
+.process-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+}
+.process-grid .ph-photo{aspect-ratio:1/1;}
+
+/* ============================================================
+   ДОСТАВКА И ОПЛАТА
+   ============================================================ */
+.info-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);
+}
+.info-card{background:var(--paper);padding:40px 32px;}
+.info-card .num{
+  font-family:var(--hand);font-size:30px;color:var(--ink-faint);
+  display:block;margin-bottom:14px;
+}
+.faq-item{border-bottom:1px solid var(--line);padding:24px 0;}
+.faq-item summary{
+  cursor:pointer;font-family:var(--serif);font-size:18px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.faq-item summary::-webkit-details-marker{display:none;}
+.faq-item summary::after{content:"+";font-size:22px;color:var(--ink-faint);transition:transform .2s ease;}
+.faq-item[open] summary::after{transform:rotate(45deg);}
+.faq-item p{margin-top:14px;max-width:60ch;}
+
+/* ============================================================
+   КОНТАКТЫ
+   ============================================================ */
+.contacts-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:64px;
+}
+.contact-list li{
+  padding:20px 0;border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:baseline;gap:20px;
+}
+.contact-list .label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);}
+.contact-list .value{font-family:var(--serif);font-size:19px;}
+
+.form-field{margin-bottom:22px;}
+.form-field label{
+  display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-faint);margin-bottom:8px;
+}
+.form-field input,.form-field textarea{
+  width:100%;border:none;border-bottom:1px solid var(--line);
+  padding:10px 0;font-family:var(--sans);font-size:16px;color:var(--ink);
+  background:transparent;transition:border-color .2s ease;
+}
+.form-field input:focus,.form-field textarea:focus{
+  outline:none;border-color:var(--ink);
+}
+.form-field textarea{resize:vertical;min-height:100px;}
+.form-note{font-size:13px;color:var(--ink-faint);margin-top:18px;}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{border-top:1px solid var(--line);padding:56px 0 40px;}
+.footer-top{
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:32px;
+  padding-bottom:32px;margin-bottom:24px;border-bottom:1px solid var(--line);
+}
+.footer-nav{display:flex;gap:28px;flex-wrap:wrap;}
+.footer-nav a{font-size:13px;color:var(--ink-soft);}
+.footer-nav a:hover{color:var(--ink);}
+.footer-bottom{
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  font-size:12px;color:var(--ink-faint);
+}
+
+/* фокус для доступности */
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--ink);outline-offset:3px;
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;scroll-behavior:auto !important;}
+}
+
+/* ============================================================
+   АДАПТИВ
+   ============================================================ */
+@media (max-width:900px){
+  nav.primary-nav{
+    position:fixed;top:76px;left:0;right:0;bottom:0;
+    background:var(--paper);
+    display:flex;align-items:flex-start;justify-content:flex-start;
+    padding:40px 32px;
+    transform:translateX(100%);
+    transition:transform .3s ease;
+  }
+  nav.primary-nav.open{transform:translateX(0);}
+  nav.primary-nav ul{flex-direction:column;gap:22px;}
+  nav.primary-nav a{font-size:20px;}
+  .burger{display:block;}
+
+  .featured-grid,.product-grid{grid-template-columns:repeat(2,1fr);}
+  .about-teaser,.about-hero,.contacts-grid{grid-template-columns:1fr;}
+  .info-grid{grid-template-columns:1fr;}
+  .process-grid{grid-template-columns:repeat(2,1fr);}
+  .modal{grid-template-columns:1fr;}
+  .modal .ph-photo{aspect-ratio:4/5;}
+}
+@media (max-width:560px){
+  .featured-grid,.product-grid{grid-template-columns:1fr;}
+  .wrap{padding:0 20px;}
+  section{padding:64px 0;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <a href="#home" class="logotype" data-nav="home"><span>в</span><span>с</span><span class="sig">Е</span><span class="sig">Л</span><span class="sig">Е</span><span class="sig">Н</span><span>н</span><span class="sig">А</span><span>я</span></a>
+    <nav class="primary-nav">
+      <ul>
+        <li><a href="#home" data-nav="home">Главная</a></li>
+        <li><a href="#catalog" data-nav="catalog">Каталог</a></li>
+        <li><a href="#about" data-nav="about">О мастере</a></li>
+        <li><a href="#delivery" data-nav="delivery">Доставка и оплата</a></li>
+        <li><a href="#contacts" data-nav="contacts">Контакты</a></li>
+      </ul>
+    </nav>
+    <button class="burger" aria-label="Меню"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- ================= ГЛАВНАЯ ================= -->
+<div class="page" id="page-home">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-top">
+        <div>
+          <span class="eyebrow">мастерская подарков</span>
+          <h1 class="logotype-big"><span>в</span><span>с</span><span class="sig">Е</span><span class="sig">Л</span><span class="sig">Е</span><span class="sig">Н</span><span>н</span><span class="sig">А</span><span>я</span></h1>
+        </div>
+        <p class="hero-meta">Вещи, которые помнят тепло рук.
+Уберите безликий масс-маркет. Впустите в жизнь уникальность, созданную с душой для вас и ваших близких</p>
+      </div>
+      <div class="hero-desc">
+        <p class="lede">Если Вы ищите не просто красивую вещь, а что-то с настроением , идеей и заботой. Всегда рада сделать что-то особенное именно для ВАС!</p>
+        <a href="#catalog" data-nav="catalog" class="btn btn-arrow">Смотреть каталог</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-line-top">
+    <div class="wrap">
+      <span class="eyebrow">избранное</span>
+      <h2 style="margin-bottom:36px;">Последние работы</h2>
+      <div class="featured-grid" id="featured-grid"></div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <blockquote class="handwritten">
+        «Я не делаю вещи под заказ партиями — каждая работа рождается один раз, и второй такой уже не будет»
+        <cite>Елена, мастер мастерской «всЕЛЕНнАя»</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap about-teaser">
+      <img src="images/master.jpg" alt="Мастер" style="aspect-ratio:4/5;object-fit:cover;border-radius:4px;">
+      <div>
+        <span class="eyebrow">о мастерской</span>
+        <h2 style="margin-bottom:18px;">Руки, которые помнят каждую вещь</h2>
+        <p class="lede" style="margin-bottom:28px;">Мастерская «всЕЛЕНнАя» — это один человек, один стол и много материалов: глина, дерево, нитки, металл. Никакого конвейера — только то, что можно сделать своими руками и с удовольствием подарить.</p>
+        <a href="#about" data-nav="about" class="btn btn-ghost btn-arrow">Узнать больше</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= КАТАЛОГ ================= -->
+<div class="page" id="page-catalog">
+  <section class="tight" style="padding-top:52px;">
+    <div class="wrap">
+      <span class="eyebrow">каталог</span>
+      <div class="catalog-head" style="border-bottom:none;padding-bottom:0;margin-bottom:20px;">
+        <h2>Все работы</h2>
+      </div>
+      <div class="filters" id="filters"></div>
+      <div class="filters filters-sub" id="subfilters"></div>
+      <div class="product-grid" id="product-grid"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= О МАСТЕРЕ ================= -->
+<div class="page" id="page-about">
+  <section class="tight" style="padding-top:52px;">
+    <div class="wrap about-hero">
+      <div>
+        <span class="eyebrow">о мастере</span>
+        <h2 style="margin-bottom:18px;">Елена — руки за каждой вещью в «всЕЛЕНнАя»</h2>
+        <p class="lede" style="margin-bottom:16px;">Познакомимся?
+Меня зовут Елена и больше 5 лет я создаю вещи с душой –от уютных мелочей до запоминающихся подарков для самых особенных случаев.
+-Каждое изделие – это не просто красивая вещь, а настроение ,история, эмоции, и тепло моих рук. Я верю, что подарок должен быть уникальным и говорить без слов: «ТЫ ВАЖЕН»
+Это любовь, уникальность и индивидуальность.</p>
+      </div>
+      <img src="images/master.jpg" alt="Мастер" style="aspect-ratio:4/5;object-fit:cover;border-radius:4px;">
+    </div>
+  </section>
+
+  <section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow"></span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= ДОСТАВКА И ОПЛАТА ================= -->
+<div class="page" id="page-delivery">
+  <section class="tight" style="padding-top:52px;">
+    <div class="wrap">
+      <span class="eyebrow">условия</span>
+      <h2 style="margin-bottom:36px;">Доставка и оплата</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <span class="num">01</span>
+          <h3 style="margin-bottom:10px;">По городу</h3>
+          <p>Курьером в течение 1–3 дней после подтверждения заказа. Стоимость и сроки уточняются в переписке.</p>
+        </div>
+        <div class="info-card">
+          <span class="num">02</span>
+          <h3 style="margin-bottom:10px;">По стране</h3>
+          <p>Отправка транспортной компанией или почтой, бережная упаковка каждой работы. Срок — от 3 до 10 дней.</p>
+        </div>
+        <div class="info-card">
+          <span class="num">03</span>
+          <h3 style="margin-bottom:10px;">Оплата</h3>
+          <p>Перевод на карту или через выбранную платёжную систему — реквизиты присылаются после согласования заказа.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap" style="max-width:820px;">
+      <span class="eyebrow">частые вопросы</span>
+      <h2 style="margin-bottom:24px;">Коротко о важном</h2>
+      <details class="faq-item" open>
+        <summary>Можно ли сделать вещь под заказ, которой нет в каталоге?</summary>
+        <p>Да, опишите идею в сообщении на странице «Контакты» — обсудим материал, сроки и стоимость индивидуально.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Что если вещь повредится при доставке?</summary>
+        <p>Каждая работа упаковывается вручную с расчётом на дорогу. Если что-то пошло не так — просто напишите, решим вопрос.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Как понять реальный размер и цвет изделия?</summary>
+        <p>В карточке каждого товара указаны размеры и материалы. Если сомневаетесь — уточните в сообщении, пришлю дополнительные фото.</p>
+      </details>
+    </div>
+  </section>
+</div>
+
+<!-- ================= КОНТАКТЫ ================= -->
+<div class="page" id="page-contacts">
+  <section class="tight" style="padding-top:52px;">
+    <div class="wrap contacts-grid">
+      <div>
+        <span class="eyebrow">на связи</span>
+        <h2 style="margin-bottom:24px;">Написать мастеру</h2>
+        <p class="lede" style="margin-bottom:32px;">Есть вопрос по товару, хотите индивидуальный заказ или просто хотите поздороваться — форма ниже дойдёт напрямую.</p>
+        <ul class="contact-list">
+          <li><span class="label">Телефон</span><span class="value">+79203008945</span></li>
+          <li><span class="label">Telegram</span><span class="value">@Elena_podarki</span></li>
+          <li><span class="label">Вконтакте</span><span class="value">@vkusnii_buketiki67</span></li>
+        </ul>
+        <p style="margin-top:16px;font-size:13px;color:var(--ink-faint);"></p>
+      </div>
+      <div>
+        <form id="contact-form" onsubmit="return false;">
+          <div class="form-field">
+            <label for="cf-name">Имя</label>
+            <input id="cf-name" type="text" placeholder="Как к вам обращаться">
+          </div>
+          <div class="form-field">
+            <label for="cf-contact">Телефон или Telegram</label>
+            <input id="cf-contact" type="text" placeholder="Куда ответить">
+          </div>
+          <div class="form-field">
+            <label for="cf-msg">Сообщение</label>
+            <textarea id="cf-msg" placeholder="О чём хотите спросить"></textarea>
+          </div>
+          <button type="submit" class="btn">Отправить</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="logotype"><span>в</span><span>с</span><span class="sig">Е</span><span class="sig">Л</span><span class="sig">Е</span><span class="sig">Н</span><span>н</span><span class="sig">А</span><span>я</span></div>
+      <nav class="footer-nav">
+        <a href="#home" data-nav="home">Главная</a>
+        <a href="#catalog" data-nav="catalog">Каталог</a>
+        <a href="#about" data-nav="about">О мастере</a>
+        <a href="#delivery" data-nav="delivery">Доставка и оплата</a>
+        <a href="#contacts" data-nav="contacts">Контакты</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Мастерская подарков «всЕЛЕНнАя»</span>
+      <span></span>
+    </div>
+  </div>
+</footer>
+
+<!-- модалка товара -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<script>
+/* ============================================================================
+   СПИСОК ТОВАРОВ — РЕДАКТИРУЙТЕ ЗДЕСЬ
+   Чтобы добавить свой товар — скопируйте один блок {...} и измените поля:
+   - name: название
+   - category: одна из "ceramics" | "candles" | "decor" | "textile" | "jewelry" | "bouquets"
+   - price: цена в рублях (число)
+   - desc: короткое описание для карточки товара
+   - icon: какую заглушку-иконку показать (можно оставить как есть)
+   - image: путь к реальному фото, например "photos/cup-1.jpg".
+            Пока поле пустое ("") — вместо фото показывается плейсхолдер.
+            Как только вы добавите файл фото рядом с сайтом и впишете путь
+            сюда — оно подставится автоматически.
+   ============================================================================ */
+/* ============================================================================
+   КАТЕГОРИИ И ПОДРАЗДЕЛЫ
+   У каждого товара теперь два поля: category (крупный раздел) и sub (подраздел).
+   Чтобы добавить свой подраздел — впишите новый ключ в subs нужной категории.
+   ============================================================================ */
+const CATALOG = {
+  bouquets:  { label:"Съедобные букеты",             subs:{ candy:"Конфетные", male:"Мужские", nuts:"Сухофрукты и орехи", balloons:"Букеты с шарами", fruit:"Фруктовые", bubbles:"Композиции с шарами BUBBLES", cheese:"Сырные" } },
+  knitting:  { label:"Вязание",                       subs:{ toys:"Игрушки", headscarves:"Косынки", accessories:"Аксессуары", bags:"Сумки" } },
+  candles:   { label:"Свечи",                         subs:{ container:"Контейнерные", shaped:"Формовые" } },
+  workshops: { label:"Мастер-классы",                 subs:{ plaster:"Роспись гипсовых кашпо", decoupage:"Декупаж на гипсе", candles:"Создание свечей и аромасаше" } }
+};
+
+const ICONS = {
+  bouquets:  `<svg viewBox="0 0 24 24" fill="none" stroke-width="1"><circle cx="12" cy="8" r="3"/><circle cx="7.5" cy="10.5" r="2.4"/><circle cx="16.5" cy="10.5" r="2.4"/><path d="M12 11v10"/></svg>`,
+  knitting:  `<svg viewBox="0 0 24 24" fill="none" stroke-width="1"><path d="M4 8c4 4 4-4 8 0s4-4 8 0M4 16c4 4 4-4 8 0s4-4 8 0"/></svg>`,
+  candles:   `<svg viewBox="0 0 24 24" fill="none" stroke-width="1"><path d="M12 2c-1.6 3-4 5-4 8a4 4 0 008 0c0-1.4-.7-2.3-1.4-3.1.3 1.4-.8 2.1-1.4 1.5.6-1.6-.4-3.2-1.2-6.4z"/><path d="M6 21h12M9 21v-8h6v8"/></svg>`,
+  workshops: `<svg viewBox="0 0 24 24" fill="none" stroke-width="1"><path d="M4 19l6-6M14 5l5 5-9 9H5v-5l9-9z"/></svg>`
+};
+
+/* Обновленный каталог товаров с новой структурой и фото */
+const PRODUCTS = [
+  // Съедобные букеты — Мужские
+  { id:1,  name:"Мужской букет из морепродуктов",  category:"bouquets", sub:"male",       price:3500, desc:"Съедобный букет из морепродуктов для мужчины.Есть возможность добавить алкоголь", image:"images/buketM.jpg" },
+  { id:2,  name:"Мужской бургер",                  category:"bouquets", sub:"male",       price:2000, desc:"Съедобный букет в виде бургера.", image:"images/burger.jpg" },
+
+  // Съедобные букеты — Сухофрукты и орехи
+  { id:3,  name:"Букет из орехов с сухофруктов",   category:"bouquets", sub:"nuts",       price:1800, desc:"Оригинальный подарочный букет из орехов и сухофруктов.", image:"images/orexsyhofrekt.jpg" },
+
+  // Съедобные букеты — Конфетные
+  { id:4,  name:"Букет из жвачек LOVE is",         category:"bouquets", sub:"candy",      price:1800, desc:"Необычный подарочный букет из жвачек.", image:"images/byketloveis.jpg" },
+
+  // Съедобные букеты — Букеты с шарами
+  { id:5,  name:"Букет с шарами и сухофруктами",  category:"bouquets", sub:"balloons",    price:2200, desc:"Съедобный букет с воздушными шарами.", image:"images/shari.jpg" },
+
+  // Вязание — Игрушки
+  { id:6,  name:"Вязаная игрушка медведь",         category:"knitting", sub:"toys",       price:600,  desc:"Мягкая вязаная игрушка ручной работы.", image:"images/medved.jpg" },
+  { id:7,  name:"Вязаная погремушка",              category:"knitting", sub:"toys",       price:450,  desc:"Вязаная погремушка для малыша.", image:"images/pogrem.jpg" },
+
+  // Вязание — Косынки
+  { id:8,  name:"Косынка вязаная хлопковая",       category:"knitting", sub:"headscarves", price:500, desc:"Лёгкая вязаная косынка из хлопка.", image:"images/kosinka.jpg" },
+
+  // Вязание — Аксессуары
+  { id:9,  name:"Корзинка из хлопковой нити",      category:"knitting", sub:"accessories", price:500, desc:"Плетёная корзинка ручной работы.", image:"images/korzinka.jpg" },
+
+  // Свечи — Контейнерные
+  { id:11, name:"Свеча-пирожное",                  category:"candles", sub:"container",    price:1200, desc:"Декоративная свеча в виде десерта в контейнере.", image:"images/piroj.jpg" },
+  { id:12, name:"Свечи с сухоцветами",             category:"candles", sub:"container",    price:600,  desc:"Ароматическая свеча с украшением из сухоцветов.", image:"images/svech.jpg" },
+  { id:13, name:"Свечи «Семейный очаг»",           category:"candles", sub:"container",    price:1000, desc:"Свеча с тёплым домашним ароматом.", image:"images/ochag.jpg" },
+  { id:14, name:"Свечи с ароматом Смоленска",      category:"candles", sub:"container",    price:1000, desc:"Набор свечей в контейнере с ароматами Смоленска.", image:"images/smol.jpg" },
+
+  // Свечи — Формовые
+  { id:15, name:"Свеча «Птичка»",                  category:"candles", sub:"shaped",       price:500,  desc:"Фигурная свеча ручной заливки.", image:"images/ptichki.jpg" },
+  { id:16, name:"Свеча пион",                      category:"candles", sub:"shaped",       price:350,  desc:"Ароматическая свеча в форме пиона.", image:"images/pion.jpg" },
+  { id:17, name:"Свечи формовые",                  category:"candles", sub:"shaped",       price:250,  desc:"Фигурные свечи ручной заливки.", image:"images/form.jpg" },
+  { id:18, name:"Свечи из натуральной вощины",    category:"candles", sub:"shaped",       price:250,  desc:"Экологичные свечи из натурального пчелиного воска.", image:"images/natur.jpg" },
+
+  // Изделия из фоамирана — Украшения
+
+  // Изделия из эпоксидной смолы — Для дома
+
+  // Новогодние игрушки
+
+  // Мастер-классы — Роспись гипсовых кашпо
+  { id:26, name:"МК: Роспись гипсовых кашпо",      category:"workshops", sub:"plaster",   price:1500, desc:"Мастер-класс по росписи гипсовых кашпо для детей и взрослых.", image:"images/mk1.jpg" },
+
+  // Мастер-классы — Декупаж на гипсе
+  { id:27, name:"МК: Декупаж на гипсе",            category:"workshops", sub:"decoupage",  price:1500, desc:"Мастер-класс по технике декупажа на гипсовых изделиях.", image:"images/mk2.jpg" },
+
+  // Мастер-классы — Создание свечей и аромасаше
+  { id:28, name:"МК: Создание свечей",             category:"workshops", sub:"candles",    price:2000, desc:"Мастер-класс по созданию ароматических свечей ручной работы.", image:"images/mk3.jpg" },
+  { id:29, name:"МК: Создание аромасаше",          category:"workshops", sub:"candles",    price:1200, desc:"Мастер-класс по изготовлению ароматических саше.", image:"images/mk4.jpg" },
+
+  // Новые товары
+  { id:30, name:"Фруктовый букет",                  category:"bouquets", sub:"fruit",       price:2000, desc:"Съедобный букет из свежих фруктов.", image:"images/frukt.jpg" },
+  { id:31, name:"Композиции с шарами BUBBLES",      category:"bouquets", sub:"bubbles",     price:2500, desc:"Композиция с воздушными шарами и букетом.", image:"images/bubls.jpg" },
+  { id:32, name:"Конфетный букет",                  category:"bouquets", sub:"candy",       price:1600, desc:"Красивый букет из конфет и сладостей.", image:"images/konf.jpg" },
+  { id:33, name:"Сырный букет",                     category:"bouquets", sub:"cheese",      price:2300, desc:"Оригинальный букет из разных видов сыра.", image:"images/sir.jpg" },
+  { id:34, name:"Вязанная сумка",                   category:"knitting", sub:"bags",        price:1800, desc:"Вместительная сумка ручной вязки.", image:"images/symka.jpg" },
+];
+
+/* ============================================================================
+   НАВИГАЦИЯ МЕЖДУ "СТРАНИЦАМИ"
+   ============================================================================ */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const target = document.getElementById('page-'+id);
+  if(target) target.classList.add('active');
+  document.querySelectorAll('[data-nav]').forEach(a=>{
+    a.classList.toggle('active', a.dataset.nav === id);
+  });
+  window.scrollTo({top:0,behavior:'instant'});
+  document.querySelector('nav.primary-nav').classList.remove('open');
+  document.querySelector('.burger').classList.remove('open');
+}
+
+function routeFromHash(){
+  const id = (location.hash || '#home').slice(1);
+  const valid = ['home','catalog','about','delivery','contacts'];
+  showPage(valid.includes(id) ? id : 'home');
+}
+
+document.querySelectorAll('[data-nav]').forEach(a=>{
+  a.addEventListener('click', e=>{
+    e.preventDefault();
+    location.hash = a.dataset.nav;
+  });
+});
+window.addEventListener('hashchange', routeFromHash);
+
+const burger = document.querySelector('.burger');
+burger.addEventListener('click', ()=>{
+  burger.classList.toggle('open');
+  document.querySelector('nav.primary-nav').classList.toggle('open');
+});
+
+/* ============================================================================
+   РЕНДЕР ПЛЕЙСХОЛДЕРА ФОТО (или реального фото, если оно указано)
+   ============================================================================ */
+function photoBlock(product){
+  if(product.image){
+    return `<img src="${product.image}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;">`;
+  }
+  return `<div class="ph-photo">${ICONS[product.category] || ''}</div>`;
+}
+
+function priceFmt(n){
+  return n.toLocaleString('ru-RU') + ' ₽';
+}
+
+/* ============================================================================
+   РЕНДЕР КАРТОЧКИ ТОВАРА
+   ============================================================================ */
+function productCard(p){
+  const wrap = document.createElement('div');
+  wrap.className = 'product-card';
+  wrap.innerHTML = `
+    ${photoBlock(p)}
+    <div class="info">
+      <div>
+        <h3>${p.name}</h3>
+        <span class="cat-label">${CATALOG[p.category].subs[p.sub] || CATALOG[p.category].label}</span>
+      </div>
+      <span class="price">${priceFmt(p.price)}</span>
+    </div>
+  `;
+  wrap.addEventListener('click', ()=>openModal(p));
+  return wrap;
+}
+
+/* избранное на главной — первые 3 товара */
+const featuredGrid = document.getElementById('featured-grid');
+PRODUCTS.slice(0,3).forEach(p=> featuredGrid.appendChild(productCard(p)));
+
+/* двухуровневые фильтры каталога: раздел -> подраздел */
+const filtersEl = document.getElementById('filters');
+const subfiltersEl = document.getElementById('subfilters');
+let activeCategory = 'all';
+let activeSub = 'all';
+
+function renderMainFilters(){
+  filtersEl.innerHTML = '';
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-btn' + (activeCategory==='all' ? ' active' : '');
+  allBtn.textContent = 'Все';
+  allBtn.addEventListener('click', ()=>{ activeCategory='all'; activeSub='all'; renderMainFilters(); renderSubFilters(); renderCatalog(); });
+  filtersEl.appendChild(allBtn);
+
+  Object.keys(CATALOG).forEach(key=>{
+    const b = document.createElement('button');
+    b.className = 'filter-btn' + (key===activeCategory ? ' active' : '');
+    b.textContent = CATALOG[key].label;
+    b.addEventListener('click', ()=>{
+      activeCategory = key;
+      activeSub = 'all';
+      renderMainFilters();
+      renderSubFilters();
+      renderCatalog();
+    });
+    filtersEl.appendChild(b);
+  });
+}
+
+function renderSubFilters(){
+  subfiltersEl.innerHTML = '';
+  if(activeCategory==='all') return;
+  const subs = CATALOG[activeCategory].subs;
+
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-btn' + (activeSub==='all' ? ' active' : '');
+  allBtn.textContent = 'Все подразделы';
+  allBtn.addEventListener('click', ()=>{ activeSub='all'; renderSubFilters(); renderCatalog(); });
+  subfiltersEl.appendChild(allBtn);
+
+  Object.keys(subs).forEach(key=>{
+    const b = document.createElement('button');
+    b.className = 'filter-btn' + (key===activeSub ? ' active' : '');
+    b.textContent = subs[key];
+    b.addEventListener('click', ()=>{
+      activeSub = key;
+      subfiltersEl.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      renderCatalog();
+    });
+    subfiltersEl.appendChild(b);
+  });
+}
+
+function renderCatalog(){
+  const grid = document.getElementById('product-grid');
+  grid.innerHTML = '';
+  let list = PRODUCTS;
+  if(activeCategory !== 'all') list = list.filter(p=>p.category===activeCategory);
+  if(activeSub !== 'all') list = list.filter(p=>p.sub===activeSub);
+  if(list.length===0){
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">В этом разделе пока пусто</div>`;
+    return;
+  }
+  list.forEach(p=> grid.appendChild(productCard(p)));
+}
+
+renderMainFilters();
+renderSubFilters();
+renderCatalog();
+
+/* модалка карточки товара */
+function openModal(p){
+  const content = document.getElementById('modal-content');
+  content.innerHTML = `
+    <button class="modal-close" id="modal-close">✕</button>
+    ${photoBlock(p)}
+    <div class="modal-info">
+      <span class="eyebrow" style="font-size:16px;">${CATALOG[p.category].label} · ${CATALOG[p.category].subs[p.sub] || ''}</span>
+      <h3 style="font-size:26px;">${p.name}</h3>
+      <p>${p.desc}</p>
+      <span class="price" style="font-size:24px;">${priceFmt(p.price)}</span>
+      <a href="#contacts" data-nav="contacts" class="btn" style="margin-top:12px;align-self:flex-start;">Спросить про заказ</a>
+    </div>
+  `;
+  content.querySelector('[data-nav]').addEventListener('click', e=>{
+    e.preventDefault();
+    closeModal();
+    location.hash = 'contacts';
+  });
+  content.querySelector('#modal-close').addEventListener('click', closeModal);
+  document.getElementById('modal-backdrop').classList.add('open');
+}
+function closeModal(){
+  document.getElementById('modal-backdrop').classList.remove('open');
+}
+document.getElementById('modal-backdrop').addEventListener('click', e=>{
+  if(e.target.id === 'modal-backdrop') closeModal();
+});
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape') closeModal();
+});
+
+/* демо-обработка формы контактов */
+document.getElementById('contact-form').addEventListener('submit', ()=>{
+  const btn = document.querySelector('#contact-form button');
+  btn.textContent = 'Сообщение подготовлено ✓';
+  setTimeout(()=> btn.textContent = 'Отправить', 2200);
+});
+
+routeFromHash();
+</script>
+</body>
+</html>
